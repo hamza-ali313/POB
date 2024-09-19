@@ -1,0 +1,26 @@
+{%- set loans = frappe.db.get_list('Loan', fields=['name', 'loan_amount']) %}
+
+<table border='1'>
+    <thead>
+        <tr>
+            <th>Loan Type</th>
+            <th>Loan Payment</th>
+            <th>Balance</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in doc.loans %}
+            {%- set loan_amount = 0 -%}
+            {% for loan in loans %}
+                {%- if row.account == loan.name -%}
+                    {%- set loan_amount = loan.loan_amount -%}
+                {%- endif -%}
+            {% endfor %}
+            <tr>
+                <td>{{ row.loan_account }}</td>
+                <td>{{ row.total_payment }}</td>
+                <td>{{ loan_amount - row.total_payment }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
